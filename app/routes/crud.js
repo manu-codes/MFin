@@ -3,32 +3,21 @@ module.exports = function(app) {
     fileAsync = require("lowdb/lib/storages/file-async")
     DATA_PATH = "data/"
     DB_NAME = "mfin"
+    dbSchema = require("../../data/schema");
     Validator = require('jsonschema').Validator;
     v = new Validator();
 
     db = low(DATA_PATH + DB_NAME + ".json", {
         storage: fileAsync
     })
-    tables = ['account',
-        'expense',
-        'income',
-        'transfer',
-        'loan',
-        'tag',
-        'tag_rule',
-        'contact'
-    ];
-    // handleDeleteTransactionRequest();
+    tables = dbSchema.getTables();
 
-    let accountSchema = {
-        "required": ['description', 'date']
-    };
+    
 
 
 
     const init = function() {
         forAllTables(function(table) {
-            console.log("Init table " + table);
             let obj = {};
             obj[table] = [];
             db.defaults(obj).write()
@@ -51,9 +40,9 @@ module.exports = function(app) {
     }
     const handlePostTableRequest = function() {
         forAllTables(function(table) {
-            console.log("Handling POST table request - " + table);
             app.post("/" + table, (req, res) => {
-                let validated = v.validate(req.body, accountSchema).errors;
+                console.log(dbSchema)
+                let validated = v.validate(req.body, dbSchema[table]).errors;
                 if (validated.length > 0) {
                     res.status(422).send(validated);
                 } else {
