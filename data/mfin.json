@@ -149,6 +149,41 @@
       "description": "very good",
       "date": "23.33",
       "id": 1496510906003
+    },
+    {
+      "id": 1496513141839,
+      "name": "23.33",
+      "type": "savings",
+      "owner": "manu"
+    },
+    {
+      "id": 1496513208919,
+      "name": "23.33",
+      "type": "savings",
+      "owner": "manu"
+    },
+    {
+      "id": 1496513250511,
+      "name": "23.33",
+      "type": "savings",
+      "owner": "manu"
+    },
+    {
+      "id": 1496513250652,
+      "name": "23.33",
+      "type": "savings",
+      "owner": "manu"
+    },
+    {
+      "id": 1496513313517,
+      "name": "23.33",
+      "type": "savings",
+      "owner": "manu"
+    }
+  ],
+  "push_counter": [
+    {
+      "id_count": 1
     }
   ]
 }

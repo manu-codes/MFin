@@ -26,7 +26,6 @@ module.exports = function(app) {
     }
     const handleGetTableRequest = function() {
         forAllTables(function(table) {
-            console.log("Handling GET table request - " + table);
             app.get("/" + table + "/:id", (req, res) => {
                 let tdata = db.get(table)
                     .find({
@@ -39,13 +38,17 @@ module.exports = function(app) {
         });
     }
     const handlePostTableRequest = function() {
+      db.get('push_counter').push({id_count:1}).write();
         forAllTables(function(table) {
             app.post("/" + table, (req, res) => {
-                console.log(dbSchema)
                 let validated = v.validate(req.body, dbSchema[table]).errors;
+
                 if (validated.length > 0) {
                     res.status(422).send(validated);
                 } else {
+                  
+                  console.log(db.get('push_counter').find('id_count'));
+
                     db.get(table)
                         .push(req.body)
                         .last()
