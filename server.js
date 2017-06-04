@@ -28,7 +28,8 @@ app.use(express.static(__dirname + '/public'));
 
 // routes ==================================================
 require("./app/routes/web")(app); // configure our routes
-require("./app/routes/crud")(app); // configure our routes
+require("./app/routes/crud")(app); 
+// configure our routes
 
 // start app ===============================================
 // startup our app at http://localhost:8080

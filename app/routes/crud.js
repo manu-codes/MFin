@@ -51,13 +51,16 @@ module.exports = function(app) {
         });
     }
     const handleGetAllTableRequest = function() {
-
         forAllTables(function(table) {
-           console.log(SERVICE_PATH + "/all/" + table);
+            console.log(SERVICE_PATH + "/" + table);
             app.get(SERVICE_PATH + "/all/" + table, (req, res) => {
-                let tdata = db.get(table)
-                    .value()
-                res.send(tdata)
+                console.log(dbUtil.isBlankObject(req.query));
+                if (dbUtil.isBlankObject(req.query)) {
+                    res.send(db.get(table).value());
+                } else {
+                    res.send(db.get(table).find(req.query).value());
+                }
+
             })
         });
     }
@@ -74,8 +77,9 @@ module.exports = function(app) {
     }
     dbUtil.init(db);
     init();
+    handleGetAllTableRequest();
     handleGetTableRequest();
     handlePostTableRequest();
-   handleGetAllTableRequest();
+
 
 };
