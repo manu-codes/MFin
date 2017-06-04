@@ -1,7 +1,7 @@
 {
   "meta_push_counter": [
     {
-      "id_count": 4,
+      "id_count": 5,
       "item": "counter"
     }
   ],
@@ -30,6 +30,12 @@
       "type": "savings",
       "owner": "manu",
       "id": 3
+    },
+    {
+      "name": "23.33",
+      "type": "savings",
+      "owner": "manu",
+      "id": 4
     }
   ]
 }

@@ -50,6 +50,17 @@ module.exports = function(app) {
             })
         });
     }
+    const handleGetAllTableRequest = function() {
+
+        forAllTables(function(table) {
+           console.log(SERVICE_PATH + "/all/" + table);
+            app.get(SERVICE_PATH + "/all/" + table, (req, res) => {
+                let tdata = db.get(table)
+                    .value()
+                res.send(tdata)
+            })
+        });
+    }
     const validateTableInsert = function(table, payload) {
         //TODO - add validation for insert
 
@@ -65,5 +76,6 @@ module.exports = function(app) {
     init();
     handleGetTableRequest();
     handlePostTableRequest();
+   handleGetAllTableRequest();
 
 };
