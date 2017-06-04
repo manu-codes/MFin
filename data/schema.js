@@ -26,7 +26,7 @@ module.exports = {
     contact: {
         required: ['id', 'name', 'email', 'owner']
     },
-    push_counter :{
+    meta_push_counter :{
 
     },
 

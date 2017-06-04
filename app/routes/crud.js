@@ -3,7 +3,9 @@ module.exports = function(app) {
     fileAsync = require("lowdb/lib/storages/file-async")
     DATA_PATH = "data/"
     DB_NAME = "mfin"
+    SERVICE_PATH = "/services"
     dbSchema = require("../../data/schema");
+    dbUtil = require("../../data/dbutil");
     Validator = require('jsonschema').Validator;
     v = new Validator();
 
@@ -12,51 +14,38 @@ module.exports = function(app) {
     })
     tables = dbSchema.getTables();
 
-    
-
-
-
     const init = function() {
         forAllTables(function(table) {
-            let obj = {};
-            obj[table] = [];
-            db.defaults(obj).write()
+            if (!dbUtil.isMetaTable(table)) {
+                let obj = {};
+                obj[table] = [];
+                db.defaults(obj).write()
+            }
         })
-
+        dbUtil.initCounter();
     }
     const handleGetTableRequest = function() {
         forAllTables(function(table) {
-            app.get("/" + table + "/:id", (req, res) => {
+            app.get(SERVICE_PATH + "/" + table + "/:id", (req, res) => {
                 let tdata = db.get(table)
                     .find({
                         id: req.params.id
                     })
                     .value()
-
                 res.send(tdata)
             })
         });
     }
     const handlePostTableRequest = function() {
-      db.get('push_counter').push({id_count:1}).write();
         forAllTables(function(table) {
-            app.post("/" + table, (req, res) => {
+            app.post(SERVICE_PATH + "/" + table, (req, res) => {
+                req.body = dbUtil.assignId(req.body);
+                console.log(req.body);
                 let validated = v.validate(req.body, dbSchema[table]).errors;
-
                 if (validated.length > 0) {
                     res.status(422).send(validated);
                 } else {
-                  
-                  console.log(db.get('push_counter').find('id_count'));
-
-                    db.get(table)
-                        .push(req.body)
-                        .last()
-                        .assign({
-                            id: Date.now()
-                        })
-                        .write()
-                        .then(tdata => res.send(tdata))
+                    dbUtil.pushRow(table, req.body).then(tdata => res.send(tdata))
                 }
             })
         });
@@ -72,7 +61,7 @@ module.exports = function(app) {
             cb(tables[i]);
         }
     }
-
+    dbUtil.init(db);
     init();
     handleGetTableRequest();
     handlePostTableRequest();
