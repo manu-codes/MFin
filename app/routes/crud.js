@@ -50,6 +50,24 @@ module.exports = function(app) {
             })
         });
     }
+const handleDeleteTableRequest = function() {
+        forAllTables(function(table) {
+          console.log('delete - '+table)
+            app.delete(SERVICE_PATH + "/" + table + "/:id", (req, res) => {
+              console.log(db.get(table))
+                let tdata = db.get(table)
+                    .remove({
+                        id: new Number(req.params.id)
+                    });
+                    
+
+                res.send(db.get(table).value());
+            })
+        });
+    }
+
+
+
     const handleGetAllTableRequest = function() {
         forAllTables(function(table) {
             console.log(SERVICE_PATH + "/" + table);
@@ -80,6 +98,6 @@ module.exports = function(app) {
     handleGetAllTableRequest();
     handleGetTableRequest();
     handlePostTableRequest();
-
+handleDeleteTableRequest();
 
 };
